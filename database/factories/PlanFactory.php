@@ -1,0 +1,22 @@
+<?php
+
+namespace Database\Factories;
+
+use App\Models\Plan;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class PlanFactory extends Factory
+{
+    protected $model = Plan::class;
+
+    public function definition(): array
+    {
+        return [
+            'name' => fake()->word(),
+            'max_active_posts' => 10,
+            'daily_private_replies' => 200,
+            'monthly_private_replies' => 3000,
+        ];
+    }
+}
+
