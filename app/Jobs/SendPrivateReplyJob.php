@@ -23,23 +23,43 @@ class SendPrivateReplyJob implements ShouldQueue
 
     public function handle(GraphService $graph): void
     {
+        $pageDbId = Page::where('page_id', $this->pageId)->value('id');
+
+        if (!\App\Http\Middleware\EnforceQuotas::canSendPrivateReply($pageDbId)) {
+            CommentLog::updateOrCreate(
+                ['comment_id' => $this->commentId],
+                [
+                    'page_id' => $pageDbId,
+                    'post_id' => $this->postId,
+                    'status'  => 'failed',
+                    'error_code' => 429,
+                    'error_message' => 'Quota exceeded',
+                    'sent_at' => now(),
+                ]
+            );
+            return;
+        }
+
         $postUrl = "https://facebook.com/{$this->postId}";
-        $msg = strtr($this->template, [
-            '{post_url}' => $postUrl,
-        ]);
+        $msg = strtr($this->template, ['{post_url}' => $postUrl]);
 
         $resp = $graph->privateReply($this->commentId, $msg, $this->pageAccessToken);
 
+        $statusFail = isset($resp['error']);
         CommentLog::updateOrCreate(
             ['comment_id' => $this->commentId],
             [
-                'page_id'       => Page::where('page_id', $this->pageId)->value('id'),
+                'page_id'       => $pageDbId,
                 'post_id'       => $this->postId,
-                'status'        => isset($resp['error']) ? 'failed' : 'sent',
+                'status'        => $statusFail ? 'failed' : 'sent',
                 'error_code'    => $resp['error']['code'] ?? null,
                 'error_message' => $resp['error']['message'] ?? null,
                 'sent_at'       => now(),
             ]
         );
+
+        if (!$statusFail) {
+            \App\Http\Middleware\EnforceQuotas::incrementCounters($pageDbId);
+        }
     }
 }
