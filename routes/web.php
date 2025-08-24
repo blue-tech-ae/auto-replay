@@ -11,5 +11,6 @@ Route::get('/auth/facebook/redirect', [FacebookAuthController::class, 'redirect'
 Route::get('/auth/facebook/callback', [FacebookAuthController::class, 'callback']);
 
 Route::get('/webhooks/facebook',  [FacebookWebhookController::class, 'verify']);
-Route::post('/webhooks/facebook', [FacebookWebhookController::class, 'handle']);
+Route::post('/webhooks/facebook', [FacebookWebhookController::class, 'handle'])
+    ->middleware(['fb.verify_signature', 'throttle:webhooks']);
 

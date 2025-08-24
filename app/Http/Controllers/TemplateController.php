@@ -16,6 +16,7 @@ class TemplateController extends Controller
      * @OA\Get(
      *  path="/api/pages/{page_id}/posts/{post_id}/template",
      *  tags={"Templates"}, summary="Get template for a post",
+     *  security={{"bearerAuth":{}}},
      *  @OA\Parameter(name="page_id", in="path", required=true, @OA\Schema(type="string")),
      *  @OA\Parameter(name="post_id", in="path", required=true, @OA\Schema(type="string")),
      *  @OA\Response(response=200, description="OK")
@@ -33,6 +34,7 @@ class TemplateController extends Controller
      * @OA\Post(
      *  path="/api/pages/{page_id}/posts/{post_id}/template",
      *  tags={"Templates"}, summary="Create template",
+     *  security={{"bearerAuth":{}}},
      *  @OA\RequestBody(required=true, @OA\JsonContent(
      *    @OA\Property(property="private_reply_template", type="string"),
      *    @OA\Property(property="public_reply_template", type="string"),
@@ -61,6 +63,7 @@ class TemplateController extends Controller
      * @OA\Put(
      *  path="/api/pages/{page_id}/posts/{post_id}/template",
      *  tags={"Templates"}, summary="Update template",
+     *  security={{"bearerAuth":{}}},
      *  @OA\Response(response=200, description="OK")
      * )
      */
@@ -81,6 +84,7 @@ class TemplateController extends Controller
      * @OA\Delete(
      *  path="/api/pages/{page_id}/posts/{post_id}/template",
      *  tags={"Templates"}, summary="Delete template",
+     *  security={{"bearerAuth":{}}},
      *  @OA\Response(response=200, description="OK")
      * )
      */

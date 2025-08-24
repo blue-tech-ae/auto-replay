@@ -21,10 +21,12 @@ class FacebookAuthController extends Controller
             ])->redirect();
     }
 
-    public function callback()
+    public function callback(Request $r)
     {
         $fbUser = Socialite::driver('facebook')->user();
         $userAccessToken = $fbUser->token;
+
+        $shopId = $r->user()?->shops()->first()->id;
 
         $resp = Http::get('https://graph.facebook.com/' . env('FB_GRAPH_VERSION') . '/me/accounts', [
             'access_token' => $userAccessToken,
@@ -33,7 +35,11 @@ class FacebookAuthController extends Controller
         foreach (($resp['data'] ?? []) as $p) {
             $page = Page::updateOrCreate(
                 ['page_id' => $p['id']],
-                ['name' => $p['name'] ?? null, 'access_token' => $p['access_token']]
+                [
+                    'name' => $p['name'] ?? null,
+                    'access_token' => $p['access_token'],
+                    'shop_id' => $shopId,
+                ]
             );
 
             Http::asForm()->post('https://graph.facebook.com/' . env('FB_GRAPH_VERSION') . "/{$page->page_id}/subscribed_apps", [
