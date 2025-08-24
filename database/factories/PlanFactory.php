@@ -12,11 +12,10 @@ class PlanFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->word(),
-            'max_active_posts' => 10,
-            'daily_private_replies' => 200,
-            'monthly_private_replies' => 3000,
+            'name' => $this->faker->unique()->randomElement(['Basic','Pro','Scale','Ultra']).' '.$this->faker->randomDigit(),
+            'max_active_posts' => $this->faker->randomElement([5,25,100]),
+            'daily_private_replies' => $this->faker->numberBetween(100, 5000),
+            'monthly_private_replies' => $this->faker->numberBetween(1500, 80000),
         ];
     }
 }
-

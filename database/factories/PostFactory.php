@@ -5,7 +5,6 @@ namespace Database\Factories;
 use App\Models\Post;
 use App\Models\Page;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 class PostFactory extends Factory
 {
@@ -15,10 +14,15 @@ class PostFactory extends Factory
     {
         return [
             'page_id' => Page::factory(),
-            'post_id' => Str::uuid()->toString(),
-            'permalink_url' => fake()->url(),
-            'title' => fake()->sentence(),
-            'is_active' => true,
+            'post_id' => function (array $attrs) {
+                $page = Page::find($attrs['page_id']);
+
+                return $page
+                    ? ($page->page_id . '_' . (string) fake()->numberBetween(1000000, 9999999))
+                    : (string) fake()->uuid();
+            },
+            'title' => $this->faker->sentence(3),
+            'is_active' => false,
         ];
     }
 }

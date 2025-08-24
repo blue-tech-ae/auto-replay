@@ -5,7 +5,6 @@ namespace Database\Factories;
 use App\Models\CommentLog;
 use App\Models\Page;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 class CommentLogFactory extends Factory
 {
@@ -14,13 +13,12 @@ class CommentLogFactory extends Factory
     public function definition(): array
     {
         return [
-            'comment_id' => Str::uuid()->toString(),
             'page_id' => Page::factory(),
-            'post_id' => Str::uuid()->toString(),
-            'status' => 'sent',
-            'error_code' => null,
-            'error_message' => null,
-            'sent_at' => now(),
+            'post_id' => (string) $this->faker->uuid(),
+            'comment_id' => (string) $this->faker->uuid(),
+            'status' => $this->faker->randomElement(['sent', 'failed', 'skipped']),
+            'error_message' => $this->faker->optional(0.3)->sentence(),
+            'sent_at' => $this->faker->optional()->dateTimeBetween('-2 days', 'now'),
         ];
     }
 }
