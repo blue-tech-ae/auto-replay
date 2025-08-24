@@ -5,7 +5,6 @@ namespace Database\Factories;
 use App\Models\Page;
 use App\Models\Shop;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 class PageFactory extends Factory
 {
@@ -13,11 +12,13 @@ class PageFactory extends Factory
 
     public function definition(): array
     {
+        $pid = (string) $this->faker->numberBetween(10000000000, 99999999999);
+
         return [
             'shop_id' => Shop::factory(),
-            'page_id' => fake()->unique()->numerify('########'),
-            'name' => fake()->company(),
-            'access_token' => Str::random(40),
+            'page_id' => $pid,
+            'name' => $this->faker->company(),
+            'access_token' => 'EAAB' . base64_encode($this->faker->uuid()),
         ];
     }
 }

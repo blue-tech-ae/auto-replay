@@ -14,7 +14,7 @@ class ShopFactory extends Factory
     {
         return [
             'owner_id' => User::factory(),
-            'name' => fake()->company(),
+            'name' => $this->faker->company(),
         ];
     }
 }
