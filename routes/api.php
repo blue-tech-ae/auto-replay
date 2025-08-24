@@ -6,6 +6,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\PageManagementController;
 use App\Models\Shop;
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -23,18 +24,24 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('can:isAdmin')->apiResource('plans', PlanController::class);
 
     Route::prefix('pages/{page_id}')->middleware('page.owner')->group(function () {
-        Route::post('posts/import', [PostController::class, 'import']);
-        Route::get('posts', [PostController::class, 'index']);
-        Route::patch('posts/{post_id}/toggle', [PostController::class, 'toggle']);
+          Route::post('posts/import', [PostController::class, 'import']);
+          Route::get('posts', [PostController::class, 'index']);
+          Route::patch('posts/{post_id}/toggle', [PostController::class, 'toggle']);
 
-        Route::get('posts/{post_id}/template', [TemplateController::class, 'show']);
-        Route::post('posts/{post_id}/template', [TemplateController::class, 'store']);
-        Route::put('posts/{post_id}/template', [TemplateController::class, 'update']);
-        Route::delete('posts/{post_id}/template', [TemplateController::class, 'destroy']);
+          Route::get('posts/{post_id}/template', [TemplateController::class, 'show']);
+          Route::post('posts/{post_id}/template', [TemplateController::class, 'store']);
+          Route::put('posts/{post_id}/template', [TemplateController::class, 'update']);
+          Route::delete('posts/{post_id}/template', [TemplateController::class, 'destroy']);
 
-        Route::post('subscribe', [SubscriptionController::class, 'subscribe']);
-        Route::post('unsubscribe', [SubscriptionController::class, 'unsubscribe']);
-        Route::get('subscription', [SubscriptionController::class, 'current']);
-        Route::get('quota', [SubscriptionController::class, 'quota']);
-    });
-});
+          Route::post('subscribe', [SubscriptionController::class, 'subscribe']);
+          Route::post('unsubscribe', [SubscriptionController::class, 'unsubscribe']);
+          Route::get('subscription', [SubscriptionController::class, 'current']);
+          Route::get('quota', [SubscriptionController::class, 'quota']);
+
+          Route::delete('/', [PageManagementController::class, 'destroy']);
+          Route::post('resubscribe', [PageManagementController::class, 'resubscribe']);
+          Route::patch('posts/bulk-toggle', [PageManagementController::class, 'bulkToggle']);
+          Route::post('posts/bulk-template', [PageManagementController::class, 'bulkTemplate']);
+          Route::get('logs', [PageManagementController::class, 'logs']);
+      });
+  });
