@@ -19,6 +19,7 @@ class PostController extends Controller
      *   path="/api/pages/{page_id}/posts/import",
      *   tags={"Posts"},
      *   summary="Import latest page posts from Facebook",
+     *   security={{"bearerAuth":{}}},
      *   @OA\Parameter(name="page_id", in="path", required=true, @OA\Schema(type="string")),
      *   @OA\Response(response=200, description="Imported")
      * )
@@ -48,6 +49,7 @@ class PostController extends Controller
      *   path="/api/pages/{page_id}/posts",
      *   tags={"Posts"},
      *   summary="List posts",
+     *   security={{"bearerAuth":{}}},
      *   @OA\Parameter(name="page_id", in="path", required=true, @OA\Schema(type="string")),
      *   @OA\Response(response=200, description="OK")
      * )
@@ -64,6 +66,7 @@ class PostController extends Controller
      *   path="/api/pages/{page_id}/posts/{post_id}/toggle",
      *   tags={"Posts"},
      *   summary="Toggle post active state",
+     *   security={{"bearerAuth":{}}},
      *   @OA\Parameter(name="page_id", in="path", required=true, @OA\Schema(type="string")),
      *   @OA\Parameter(name="post_id", in="path", required=true, @OA\Schema(type="string")),
      *   @OA\Response(response=200, description="OK")
