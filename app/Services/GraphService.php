@@ -32,4 +32,15 @@ class GraphService
 
         return $resp->json();
     }
+
+    public function getPagePosts(string $pageId, string $pageAccessToken, int $limit = 50): array
+    {
+        $resp = \Http::get("{$this->base}/{$pageId}/posts", [
+            'fields'       => 'id,permalink_url,message',
+            'limit'        => $limit,
+            'access_token' => $pageAccessToken,
+        ])->throw()->json();
+
+        return $resp['data'] ?? [];
+    }
 }
