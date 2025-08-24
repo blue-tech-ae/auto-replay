@@ -43,4 +43,14 @@ class GraphService
 
         return $resp['data'] ?? [];
     }
+
+    public function subscribePageWebhooks(string $pageId, string $pageAccessToken): array
+    {
+        $resp = Http::asForm()->post("{$this->base}/{$pageId}/subscribed_apps", [
+            'subscribed_fields' => 'feed,messages,message_echoes',
+            'access_token'      => $pageAccessToken,
+        ]);
+
+        return $resp->json();
+    }
 }
